@@ -65,4 +65,24 @@ public class EmployeeRepositoryTests {
 
     }
 
+    //JUnit test for get employee by id operation
+    @DisplayName("JUnit test for get employee by id operation")
+    @Test
+    void givenEmployeeObject_whenFindById_thenReturnEmployeeObject(){
+        //given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Ram")
+                .lastName("Kumar")
+                .email("ram@gmail.com")
+                .build();
+        employeeRepository.save(employee);
+
+        //when - action or the behaviour that are going to be tested
+        Employee employeeDB =  employeeRepository.findById(employee.getId()).get();
+
+        //then - verify the output
+        assertThat(employeeDB).isNotNull();
+
+    }
+
 }
