@@ -197,6 +197,28 @@ public class EmployeeRepositoryTests {
     //JUnit test for custom query using native sql with indexed
     @DisplayName("JUnit test for custom query using native sql with indexed")
     @Test
+    void givenFirstNameAndLastName_whenFindByNativeSQLIndexedParams_thenReturnEmployeeObject(){
+        //given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Ram")
+                .lastName("Kumar")
+                .email("ram@gmail.com")
+                .build();
+        employeeRepository.save(employee);
+        String firstName = "Ram";
+        String lastName = "Kumar";
+
+        //when - action or the behaviour that are going to be tested
+        Employee selectedEmployee = employeeRepository.findByNativeSQL(firstName, lastName);
+
+        //then - verify the output
+        assertThat(selectedEmployee).isNotNull();
+
+    }
+
+    //JUnit test for custom query using native sql with named params
+    @DisplayName("JUnit test for custom query using native sql with named params")
+    @Test
     void givenFirstNameAndLastName_whenFindByNativeSQLNamedParams_thenReturnEmployeeObject(){
         //given - precondition or setup
         Employee employee = Employee.builder()
