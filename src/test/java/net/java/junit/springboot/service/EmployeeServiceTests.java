@@ -7,20 +7,36 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.mockito.BDDMockito.given;
+
+@ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTests {
 
+    @Mock
     private EmployeeRepository employeeRepository;
-    private EmployeeService employeeService;
+
+    @InjectMocks
+    private EmployeeServiceImpl employeeService;
+
+    private Employee employee;
 
     @BeforeEach
     void setUp(){
-        employeeRepository = Mockito.mock(EmployeeRepository.class);
-        employeeService = new EmployeeServiceImpl(employeeRepository);
+//        employeeRepository = Mockito.mock(EmployeeRepository.class);
+//        employeeService = new EmployeeServiceImpl(employeeRepository);
+         employee = Employee.builder()
+                .firstName("Ram")
+                .id(1L)
+                .lastName("Kumar")
+                .email("ram@gmail.com")
+                .build();
     }
 
     //JUnit test for saveEmployee method
@@ -28,16 +44,10 @@ public class EmployeeServiceTests {
     @Test
     void givenEmployeeObject_whenSaveEmployee_thenReturnEmployeeObject(){
         //given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Ram")
-                .id(1L)
-                .lastName("Kumar")
-                .email("ram@gmail.com")
-                .build();
 
-        BDDMockito.given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
+        given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
 
-        BDDMockito.given(employeeRepository.save(employee)).willReturn(employee);
+        given(employeeRepository.save(employee)).willReturn(employee);
 
         //when - action or the behaviour that are going to be tested
         Employee savedEmployee = employeeService.saveEmployee(employee);
