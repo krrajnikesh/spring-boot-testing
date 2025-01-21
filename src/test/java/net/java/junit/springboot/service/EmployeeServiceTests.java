@@ -4,7 +4,6 @@ import net.java.junit.springboot.exception.ResourceNotFoundException;
 import net.java.junit.springboot.model.Employee;
 import net.java.junit.springboot.repository.EmployeeRepository;
 import net.java.junit.springboot.service.impl.EmployeeServiceImpl;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,16 +11,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTests {
@@ -60,7 +59,7 @@ public class EmployeeServiceTests {
         Employee savedEmployee = employeeService.saveEmployee(employee);
 
         //then - verify the output
-        Assertions.assertThat(savedEmployee).isNotNull();
+        assertThat(savedEmployee).isNotNull();
 
     }
 
@@ -100,8 +99,8 @@ public class EmployeeServiceTests {
         List<Employee> employeeList = employeeService.getAllEmployee();
 
         //then - verify the output
-        Assertions.assertThat(employeeList).isNotNull();
-        Assertions.assertThat(employeeList.size()).isEqualTo(2);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(2);
 
     }
 
@@ -123,8 +122,8 @@ public class EmployeeServiceTests {
         List<Employee> employeeList = employeeService.getAllEmployee();
 
         //then - verify the output
-        Assertions.assertThat(employeeList).isEmpty();
-        Assertions.assertThat(employeeList.size()).isEqualTo(0);
+        assertThat(employeeList).isEmpty();
+        assertThat(employeeList.size()).isEqualTo(0);
 
     }
 
@@ -139,7 +138,7 @@ public class EmployeeServiceTests {
         Employee savedEmployee = employeeService.getEmployeeById(employee.getId()).get();
 
         //then - verify the output
-        Assertions.assertThat(savedEmployee).isNotNull();
+        assertThat(savedEmployee).isNotNull();
 
     }
 
@@ -155,8 +154,24 @@ public class EmployeeServiceTests {
         Employee updatedEmployee = employeeService.updateEmployee(employee);
 
         //then - verify the output
-        Assertions.assertThat(updatedEmployee.getEmail()).isEqualTo("ramesh@gmail.com");
-        Assertions.assertThat(updatedEmployee.getFirstName()).isEqualTo("Ramesh");
+        assertThat(updatedEmployee.getEmail()).isEqualTo("ramesh@gmail.com");
+        assertThat(updatedEmployee.getFirstName()).isEqualTo("Ramesh");
+
+    }
+
+    //JUnit test for delete employee by id method
+    @DisplayName("JUnit test for delete employee by id method")
+    @Test
+    void givenEmployeeId_whenDeleteEmployee_thenNothing(){
+        //given - precondition or setup
+        long employeeId = 1L;
+        willDoNothing().given(employeeRepository).deleteById(employeeId);
+
+        //when - action or the behaviour that are going to be tested
+        employeeService.deleteEmployee(employeeId);
+
+        //then - verify the output
+        verify(employeeRepository, times(1)).deleteById(employeeId);
 
     }
 
