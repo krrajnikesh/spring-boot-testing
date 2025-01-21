@@ -128,6 +128,19 @@ public class EmployeeServiceTests {
 
     }
 
+    //JUnit test for get employee by id method
+    @DisplayName("JUnit test for get employee by id method")
+    @Test
+    void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject(){
+        //given - precondition or setup
+        given(employeeRepository.findById(1L)).willReturn(Optional.of(employee));
 
+        //when - action or the behaviour that are going to be tested
+        Employee savedEmployee = employeeService.getEmployeeById(employee.getId()).get();
+
+        //then - verify the output
+        Assertions.assertThat(savedEmployee).isNotNull();
+
+    }
 
 }
