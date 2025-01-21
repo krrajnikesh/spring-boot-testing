@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -79,5 +80,30 @@ public class EmployeeServiceTests {
         verify(employeeRepository, never()).save(any(Employee.class));
 
     }
+
+    //JUnit test for get All employee method
+    @DisplayName("JUnit test for get All employee method")
+    @Test
+    void givenEmployeeList_whenAllEmployees_thenReturnAllEmployee(){
+
+        Employee employee1 = Employee.builder()
+                .firstName("Ramesh")
+                .id(2L)
+                .lastName("Kumar")
+                .email("ramesh@gmail.com")
+                .build();
+        //given - precondition or setup
+        given(employeeRepository.findAll()).willReturn(List.of(employee, employee1));
+
+        //when - action or the behaviour that are going to be tested
+        List<Employee> employeeList = employeeService.getAllEmployee();
+
+        //then - verify the output
+        Assertions.assertThat(employeeList).isNotNull();
+        Assertions.assertThat(employeeList.size()).isEqualTo(2);
+
+    }
+
+
 
 }

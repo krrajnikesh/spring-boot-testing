@@ -6,6 +6,7 @@ import net.java.junit.springboot.repository.EmployeeRepository;
 import net.java.junit.springboot.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +28,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public List<Employee> getAllEmployee() {
+        return employeeRepository.findAll();
     }
 }
