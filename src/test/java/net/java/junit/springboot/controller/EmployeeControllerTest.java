@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.java.junit.springboot.model.Employee;
 import net.java.junit.springboot.service.EmployeeService;
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -16,7 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -53,5 +58,26 @@ public class EmployeeControllerTest {
         response.andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName",
                         CoreMatchers.is(employee.getFirstName())));
+    }
+
+    //JUnit test for get all employees rest api
+    @DisplayName("JUnit test for get all employees rest api")
+    @Test
+    void givenListOfEmployees_whenGetAllEmployees_thenEmployeesList() throws Exception {
+        //given - precondition or setup
+        List<Employee> listOfEmployees = new ArrayList<>();
+        listOfEmployees.add(Employee.builder().firstName("Ram").lastName("Kumar").email("ram@gmail.com").build());
+        listOfEmployees.add(Employee.builder().firstName("Ramesh").lastName("Kumar").email("ramesh@gmail.com").build());
+
+        BDDMockito.given(employeeService.getAllEmployee()).willReturn(listOfEmployees);
+
+        //when - action or the behaviour that are going to be tested
+        ResultActions response = mockMvc.perform(get("/api/employees"));
+
+        //then - verify the output
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", CoreMatchers.is(2)));
+
     }
 }
