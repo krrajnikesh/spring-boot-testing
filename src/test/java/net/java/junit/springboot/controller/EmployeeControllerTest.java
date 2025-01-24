@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -76,6 +77,26 @@ public class EmployeeControllerTest {
         response.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.size()", is(2)));
+
+    }
+
+    //JUnit test for get employee by id rest api positive case
+    @DisplayName("JUnit test for get employee by id rest api positive case")
+    @Test
+    void givenEmployeeId_whenGetEmployeeId_thenEmployeeObject() throws Exception {
+        //given - precondition or setup
+        long employeeId = 1L;
+        Employee employee = Employee.builder().firstName("Ram").lastName("Kumar").email("ram@gmail.com").build();
+
+        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
+
+        //when - action or the behaviour that are going to be tested
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+
+        //then - verify the output
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.firstName", is("Ram")));
 
     }
 }
