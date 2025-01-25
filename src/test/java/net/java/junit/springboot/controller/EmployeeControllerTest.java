@@ -99,4 +99,22 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.firstName", is("Ram")));
 
     }
+
+    //JUnit test for get employee by id rest api negative case
+    @DisplayName("JUnit test for get employee by id rest api negative case")
+    @Test
+    void givenEmployeeId_whenGetEmployeeId_thenReturnNotFound() throws Exception {
+        //given - precondition or setup
+        long employeeId = 2L;
+        Employee employee = Employee.builder().firstName("Ram").lastName("Kumar").email("ram@gmail.com").build();
+
+        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
+
+        //when - action or the behaviour that are going to be tested
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+
+        //then - verify the output
+        response.andExpect(status().isNotFound());
+
+    }
 }
